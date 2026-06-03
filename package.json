@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-dageno-ai",
-  "version": "1.2.10",
+  "version": "1.2.11",
   "description": "n8n node for Dageno API",
   "keywords": [
     "n8n-community-node-package",
@@ -35,6 +35,9 @@
     "n8n-core": "^1.122.18",
     "n8n-workflow": "^2.13.1",
     "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
   },
   "n8n": {
     "n8nNodesApiVersion": 1,
