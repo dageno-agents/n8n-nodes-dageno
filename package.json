@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-dageno-ai",
-  "version": "1.2.9",
+  "version": "1.2.10",
   "description": "n8n node for Dageno API",
   "keywords": [
     "n8n-community-node-package",
