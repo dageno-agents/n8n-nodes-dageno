@@ -6,7 +6,7 @@ import {
 export const dagenoApiDescription: INodeTypeDescription = {
 	displayName: 'Dageno API',
 	name: 'dagenoApi',
-	icon: 'file:dageno.svg',
+	icon: 'file:dageno.png',
 	group: ['transform'],
 	version: 1,
 	subtitle: '={{$parameter["resource"] + ": " + $parameter["operation"]}}',

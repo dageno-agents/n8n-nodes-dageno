@@ -9,7 +9,7 @@ export class DagenoApi implements ICredentialType {
 	name = 'dagenoApi';
 	displayName = 'Dageno API';
 	documentationUrl = 'https://open-api-docs.dageno.ai/';
-	icon = 'file:dageno.svg';
+	icon = 'file:dageno.png' as const;
 	properties: INodeProperties[] = [
 		{
 			displayName: 'API Key',

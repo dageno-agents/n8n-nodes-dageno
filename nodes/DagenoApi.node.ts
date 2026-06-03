@@ -109,7 +109,7 @@ export class DagenoApi implements INodeType {
 				};
 
 				try {
-					responseData = await this.helpers.httpRequestWithAuthentication('dagenoApi', options);
+					responseData = await this.helpers.httpRequestWithAuthentication.call(this, 'dagenoApi', options);
 				} catch (error) {
 					throw new NodeApiError(this.getNode(), error as JsonObject);
 				}
