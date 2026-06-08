@@ -3,6 +3,16 @@ import {
 	NodeConnectionTypes,
 } from 'n8n-workflow';
 
+const listOperations = [
+	'list',
+	'listDomains',
+	'listDomainsByPrompt',
+	'listQueryFanout',
+	'listResponses',
+	'listUrls',
+	'listUrlsByPrompt',
+];
+
 export const dagenoApiDescription: INodeTypeDescription = {
 	displayName: 'Dageno API',
 	name: 'dagenoApi',
@@ -42,6 +52,10 @@ export const dagenoApiDescription: INodeTypeDescription = {
 					value: 'geoAnalysis',
 				},
 				{
+					name: 'Keyword',
+					value: 'keyword',
+				},
+				{
 					name: 'Opportunity',
 					value: 'opportunity',
 				},
@@ -50,13 +64,16 @@ export const dagenoApiDescription: INodeTypeDescription = {
 					value: 'prompt',
 				},
 				{
+					name: 'SEO',
+					value: 'seo',
+				},
+				{
 					name: 'Topic',
 					value: 'topic',
 				},
 			],
 			default: 'brand',
 		},
-		// Operations
 		{
 			displayName: 'Operation',
 			name: 'operation',
@@ -75,6 +92,40 @@ export const dagenoApiDescription: INodeTypeDescription = {
 				},
 			],
 			default: 'get',
+		},
+		{
+			displayName: 'Operation',
+			name: 'operation',
+			type: 'options',
+			noDataExpression: true,
+			displayOptions: {
+				show: {
+					resource: ['citation'],
+				},
+			},
+			options: [
+				{
+					name: 'List Domains',
+					value: 'listDomains',
+					action: 'List citation domains',
+				},
+				{
+					name: 'List Domains by Prompt',
+					value: 'listDomainsByPrompt',
+					action: 'List citation domains by prompt',
+				},
+				{
+					name: 'List URLs',
+					value: 'listUrls',
+					action: 'List citation URLs',
+				},
+				{
+					name: 'List URLs by Prompt',
+					value: 'listUrlsByPrompt',
+					action: 'List citation URLs by prompt',
+				},
+			],
+			default: 'listDomains',
 		},
 		{
 			displayName: 'Operation',
@@ -102,15 +153,29 @@ export const dagenoApiDescription: INodeTypeDescription = {
 			noDataExpression: true,
 			displayOptions: {
 				show: {
-					resource: ['opportunity'],
+					resource: ['keyword'],
 				},
 			},
 			options: [
 				{
-					name: 'List Content Opportunity',
-					value: 'content',
-					action: 'List content opportunity',
+					name: 'Get Keyword Volume',
+					value: 'getVolume',
+					action: 'Get keyword volume',
 				},
+			],
+			default: 'getVolume',
+		},
+		{
+			displayName: 'Operation',
+			name: 'operation',
+			type: 'options',
+			noDataExpression: true,
+			displayOptions: {
+				show: {
+					resource: ['opportunity'],
+				},
+			},
+			options: [
 				{
 					name: 'List Backlink Opportunity',
 					value: 'backlink',
@@ -121,8 +186,86 @@ export const dagenoApiDescription: INodeTypeDescription = {
 					value: 'community',
 					action: 'List community opportunity',
 				},
+				{
+					name: 'List Content Opportunity',
+					value: 'content',
+					action: 'List content opportunity',
+				},
 			],
 			default: 'content',
+		},
+		{
+			displayName: 'Operation',
+			name: 'operation',
+			type: 'options',
+			noDataExpression: true,
+			displayOptions: {
+				show: {
+					resource: ['prompt'],
+				},
+			},
+			options: [
+				{
+					name: 'Batch Create Prompt',
+					value: 'batchCreate',
+					action: 'Batch create prompt',
+				},
+				{
+					name: 'Batch Delete Prompt',
+					value: 'batchDelete',
+					action: 'Batch delete prompt',
+				},
+				{
+					name: 'Batch Get Prompt',
+					value: 'batchGet',
+					action: 'Batch get prompt',
+				},
+				{
+					name: 'Batch Update Prompt',
+					value: 'batchUpdate',
+					action: 'Batch update prompt',
+				},
+				{
+					name: 'Get Response Detail',
+					value: 'getResponseDetail',
+					action: 'Get response detail by prompt',
+				},
+				{
+					name: 'List Prompt',
+					value: 'list',
+					action: 'List prompt',
+				},
+				{
+					name: 'List Prompt Response',
+					value: 'listResponses',
+					action: 'List prompt response',
+				},
+				{
+					name: 'List Query Fanout',
+					value: 'listQueryFanout',
+					action: 'List query fanout by prompt',
+				},
+			],
+			default: 'list',
+		},
+		{
+			displayName: 'Operation',
+			name: 'operation',
+			type: 'options',
+			noDataExpression: true,
+			displayOptions: {
+				show: {
+					resource: ['seo'],
+				},
+			},
+			options: [
+				{
+					name: 'Get Traffic Data',
+					value: 'getTraffic',
+					action: 'Get SEO traffic data',
+				},
+			],
+			default: 'getTraffic',
 		},
 		{
 			displayName: 'Operation',
@@ -144,70 +287,6 @@ export const dagenoApiDescription: INodeTypeDescription = {
 			default: 'list',
 		},
 		{
-			displayName: 'Operation',
-			name: 'operation',
-			type: 'options',
-			noDataExpression: true,
-			displayOptions: {
-				show: {
-					resource: ['prompt'],
-				},
-			},
-			options: [
-				{
-					name: 'List Prompt',
-					value: 'list',
-					action: 'List prompt',
-				},
-				{
-					name: 'List Prompt Response',
-					value: 'listResponses',
-					action: 'List prompt response',
-				},
-				{
-					name: 'Get Response Detail',
-					value: 'getResponseDetail',
-					action: 'Get response detail by prompt',
-				},
-			],
-			default: 'list',
-		},
-		{
-			displayName: 'Operation',
-			name: 'operation',
-			type: 'options',
-			noDataExpression: true,
-			displayOptions: {
-				show: {
-					resource: ['citation'],
-				},
-			},
-			options: [
-				{
-					name: 'List Domains',
-					value: 'listDomains',
-					action: 'List citation domains',
-				},
-				{
-					name: 'List URLs',
-					value: 'listUrls',
-					action: 'List citation URLs',
-				},
-				{
-					name: 'List Domains by Prompt',
-					value: 'listDomainsByPrompt',
-					action: 'List citation domains by prompt',
-				},
-				{
-					name: 'List URLs by Prompt',
-					value: 'listUrlsByPrompt',
-					action: 'List citation URLs by prompt',
-				},
-			],
-			default: 'listDomains',
-		},
-		// Parameters
-		{
 			displayName: 'Body (JSON)',
 			name: 'body',
 			type: 'json',
@@ -222,13 +301,63 @@ export const dagenoApiDescription: INodeTypeDescription = {
 			description: 'The DSL query body for GEO analysis',
 		},
 		{
+			displayName: 'Keywords',
+			name: 'keywords',
+			type: 'string',
+			displayOptions: {
+				show: {
+					resource: ['keyword'],
+					operation: ['getVolume'],
+				},
+			},
+			default: '',
+			placeholder: 'marketing teams, content marketing',
+			required: true,
+			description: 'Comma-separated keyword list',
+		},
+		{
+			displayName: 'Domain',
+			name: 'domain',
+			type: 'string',
+			displayOptions: {
+				show: {
+					resource: ['seo'],
+					operation: ['getTraffic'],
+				},
+			},
+			default: '',
+			placeholder: 'example.com',
+			required: true,
+			description: 'Domain to retrieve SEO traffic data for',
+		},
+		{
+			displayName: 'Batch Body (JSON)',
+			name: 'batchBody',
+			type: 'json',
+			displayOptions: {
+				show: {
+					resource: ['prompt'],
+					operation: ['batchCreate', 'batchDelete', 'batchGet', 'batchUpdate'],
+				},
+			},
+			default: '{\n  "items": []\n}',
+			required: true,
+			description: 'Batch request body as JSON. Use items for create/update and ids for get/delete.',
+		},
+		{
 			displayName: 'Prompt ID',
 			name: 'promptId',
 			type: 'string',
 			displayOptions: {
 				show: {
 					resource: ['prompt', 'citation'],
-					operation: ['listResponses', 'getResponseDetail', 'listDomainsByPrompt', 'listUrlsByPrompt'],
+					operation: [
+						'getResponseDetail',
+						'listDomainsByPrompt',
+						'listQueryFanout',
+						'listResponses',
+						'listUrlsByPrompt',
+					],
 				},
 			},
 			default: '',
@@ -247,14 +376,42 @@ export const dagenoApiDescription: INodeTypeDescription = {
 			default: '',
 			required: true,
 		},
-		// Pagination and Filters (Added for GET requests based on 400 error)
+		{
+			displayName: 'Platforms',
+			name: 'platforms',
+			type: 'string',
+			displayOptions: {
+				show: {
+					resource: ['prompt'],
+					operation: ['listQueryFanout'],
+				},
+			},
+			default: '',
+			placeholder: 'chatgpt, perplexity',
+			description: 'Optional comma-separated platform filter',
+		},
+		{
+			displayName: 'Regions',
+			name: 'regions',
+			type: 'string',
+			displayOptions: {
+				show: {
+					resource: ['prompt'],
+					operation: ['listQueryFanout'],
+				},
+			},
+			default: '',
+			placeholder: 'US, GB',
+			description: 'Optional comma-separated region filter',
+		},
 		{
 			displayName: 'Page',
 			name: 'page',
 			type: 'number',
 			displayOptions: {
 				show: {
-					resource: ['opportunity', 'topic', 'prompt', 'citation'],
+					resource: ['citation', 'opportunity', 'prompt', 'topic'],
+					operation: listOperations,
 				},
 			},
 			default: 1,
@@ -266,7 +423,8 @@ export const dagenoApiDescription: INodeTypeDescription = {
 			type: 'number',
 			displayOptions: {
 				show: {
-					resource: ['opportunity', 'topic', 'prompt', 'citation'],
+					resource: ['citation', 'opportunity', 'prompt', 'topic'],
+					operation: listOperations,
 				},
 			},
 			default: 20,
@@ -278,7 +436,8 @@ export const dagenoApiDescription: INodeTypeDescription = {
 			type: 'dateTime',
 			displayOptions: {
 				show: {
-					resource: ['opportunity', 'topic', 'prompt', 'citation'],
+					resource: ['citation', 'opportunity', 'prompt', 'topic'],
+					operation: listOperations,
 				},
 			},
 			default: '={{new Date(new Date().setDate(new Date().getDate() - 30)).toISOString()}}',
@@ -290,7 +449,8 @@ export const dagenoApiDescription: INodeTypeDescription = {
 			type: 'dateTime',
 			displayOptions: {
 				show: {
-					resource: ['opportunity', 'topic', 'prompt', 'citation'],
+					resource: ['citation', 'opportunity', 'prompt', 'topic'],
+					operation: listOperations,
 				},
 			},
 			default: '={{new Date().toISOString()}}',

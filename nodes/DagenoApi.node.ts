@@ -43,23 +43,43 @@ export class DagenoApi implements INodeType {
 					qs.endAt = this.getNodeParameter('endAt', i) as string;
 				};
 
+				const getJsonBody = (parameterName: string) => {
+					const bodyInput = this.getNodeParameter(parameterName, i) as string | IDataObject;
+
+					if (typeof bodyInput !== 'string') {
+						return bodyInput;
+					}
+
+					try {
+						return JSON.parse(bodyInput) as IDataObject;
+					} catch (e) {
+						throw new NodeApiError(this.getNode(), {
+							message: `Invalid JSON format in ${parameterName} parameter. Please provide a valid JSON object.`,
+						} as JsonObject);
+					}
+				};
+
+				const getCommaSeparatedList = (parameterName: string) => {
+					const value = this.getNodeParameter(parameterName, i, '') as string;
+
+					return value
+						.split(',')
+						.map((entry) => entry.trim())
+						.filter((entry) => entry.length > 0);
+				};
+
 				if (resource === 'brand') {
 					url += '/brand';
 				} else if (resource === 'geoAnalysis') {
 					method = 'POST';
 					url += '/geo/analysis';
-					const bodyInput = this.getNodeParameter('body', i) as string | IDataObject;
-					if (typeof bodyInput === 'string') {
-						try {
-							body = JSON.parse(bodyInput);
-						} catch (e) {
-							throw new NodeApiError(this.getNode(), {
-								message: 'Invalid JSON format in Body parameter. Please provide a valid JSON object.',
-							} as JsonObject);
-						}
-					} else {
-						body = bodyInput;
-					}
+					body = getJsonBody('body');
+				} else if (resource === 'keyword') {
+					method = 'POST';
+					url += '/keywords/volume';
+					body = {
+						keywords: getCommaSeparatedList('keywords'),
+					};
 				} else if (resource === 'opportunity') {
 					url += `/opportunities/${operation}`;
 					addListParams();
@@ -78,6 +98,36 @@ export class DagenoApi implements INodeType {
 						const promptId = this.getNodeParameter('promptId', i) as string;
 						const responseId = this.getNodeParameter('responseId', i) as string;
 						url += `/prompts/${promptId}/responses/${responseId}`;
+					} else if (operation === 'listQueryFanout') {
+						const promptId = this.getNodeParameter('promptId', i) as string;
+						url += `/prompts/${promptId}/query_fanout`;
+						addListParams();
+						const platforms = getCommaSeparatedList('platforms');
+						const regions = getCommaSeparatedList('regions');
+
+						if (platforms.length > 0) {
+							qs.platforms = platforms.join(',');
+						}
+
+						if (regions.length > 0) {
+							qs.regions = regions.join(',');
+						}
+					} else if (operation === 'batchCreate') {
+						method = 'POST';
+						url += '/prompts/batch/create';
+						body = getJsonBody('batchBody');
+					} else if (operation === 'batchDelete') {
+						method = 'POST';
+						url += '/prompts/batch/delete';
+						body = getJsonBody('batchBody');
+					} else if (operation === 'batchGet') {
+						method = 'POST';
+						url += '/prompts/batch/get';
+						body = getJsonBody('batchBody');
+					} else if (operation === 'batchUpdate') {
+						method = 'POST';
+						url += '/prompts/batch/update';
+						body = getJsonBody('batchBody');
 					}
 				} else if (resource === 'citation') {
 					if (operation === 'listDomains') {
@@ -97,6 +147,9 @@ export class DagenoApi implements INodeType {
 						qs.promptId = promptId;
 						addListParams();
 					}
+				} else if (resource === 'seo') {
+					url += '/seo/traffic';
+					qs.domain = this.getNodeParameter('domain', i) as string;
 				}
 
 				const options = {
